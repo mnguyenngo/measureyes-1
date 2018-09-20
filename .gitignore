@@ -1,6 +1,7 @@
 .ipynb_checkpoints
 **/test_run_rek.sh
 **/get_HTs.sh
+**/get_HTs.ps1
 **/ARNsUnix.sh
 **/ARNsWindows.ps1
 **/StoredVidProcess.py
