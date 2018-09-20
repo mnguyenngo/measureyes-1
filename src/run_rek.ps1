@@ -19,28 +19,28 @@
 
 
 # INSTRUCTIONS:
-#    1. Substitute parameters generated in prerequisites above where indicated below in each of the export statements.
+#    1. Substitute parameters generated in prerequisites above in each of the Set-Variable statements where
+#       indicated after the -Value tags.
 #        CAUTION: ONCE AGAIN, DO NOT DISTRIBUTE THIS SCRIPT (ON GITHUB, FOR EXAMPLE) WITH SPECIFIC URL OR ARNs.
 #        RECOMMENDED: If copied into a local git repo, add this file to .gitignore
-#    2. In bash terminal shell:  $ source run_rek.sh
+#    2. In Powershell terminal:  $ .\run_rek.sh
 
-
-# Set Rekognition parameters as variables in current shell environment.
-export BUCKET="<name of AWS S3 bucket>"
-export VIDEO="<S3 path/file (NOT including bucket name)>"
-export FACE_COLLECTION="<name of AWS collection>"
-export ROLE_ARN="<DO NOT DISTRIBUTE/PUBLISH: Amazon Resource Number for IAM role provisioned with Rekognition and SQS permissions>"
-export QUEUE_URL="<DO NOT DISTRIBUTE/PUBLISH: URL to AWS SQS Queue>"
-export TOPIC_ARN="<DO NOT DISTRIBUTE/PUBLISH: ARN for AWS Topic to recieve status messages from Rekognition>"
-export JOB_TAG="<Name for job to report to AWS Simple Notification Service>"
+# Set parameters in current only (i.e., local) Powershell terminal.
+Set-Variable -Name "BUCKET" -Value "<name of AWS S3 bucket>"
+Set-Variable -Name "VIDEO" -Value "<S3 path/file (NOT including bucket name)>"
+Set-Variable -Name "FACE_COLLECTION" -Value "<name of AWS collection>"
+Set-Variable -Name "ROLE_ARN" -Value "<DO NOT DISTRIBUTE/PUBLISH: Amazon Resource Number for IAM role provisioned with Rekognition and SQS permissions>"
+Set-Variable -Name "QUEUE_URL" -Value "<DO NOT DISTRIBUTE/PUBLISH: URL to AWS SQS Queue>"
+Set-Variable -Name "TOPIC_ARN" -Value "<DO NOT DISTRIBUTE/PUBLISH: ARN for AWS Topic to recieve status messages from Rekognition>"
+Set-Variable -Name "JOB_TAG" -Value "<Name for job to report to AWS Simple Notification Service>"
 
 
 # Execute VidFaceDetection.py with parameters defined above.
-python VidFaceDetection.py \
-	--bucket $BUCKET \
-	--video $VIDEO \
-	--collection $FACE_COLLECTION \
-	--role $ROLE_ARN \
-	--sqs $QUEUE_URL \
-	--topic $TOPIC_ARN \
+python VidFaceDetection.py `
+	--video $VIDEO `
+	--bucket $BUCKET `
+	--collection $FACE_COLLECTION `
+	--role $ROLE_ARN `
+	--sqs $QUEUE_URL `
+	--topic $TOPIC_ARN `
 	--jobtag $JOB_TAG
