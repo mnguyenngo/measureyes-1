@@ -81,7 +81,7 @@ class VideoDetect():
                         jobFound = True
                         print_bool = True if write_data is None else False
                         #=============================================
-                        self.GetResultsFaceSearch(rekMessage['JobId'], print_response=print_bool)
+                        self.GetResultsFaceSearch(rekMessage['JobId']) #, print_response=print_bool)
                         #=============================================
 
                         self.sqs.delete_message(QueueUrl=self.queueUrl,
@@ -96,10 +96,11 @@ class VideoDetect():
         print('\nJOB COMPLETE')
 
 
-    def GetResultsFaceSearch(self, jobId, print_response=True):
-        maxResults = 50
+    def GetResultsFaceSearch(self, jobId, print_response=False):
+        maxResults = 1000
         paginationToken = ''
         finished = False
+        counter = 1 # for adding index numbers to names of serial json output files
 
         while finished == False:
             get_response = self.rek.get_face_search(JobId=jobId,
@@ -129,7 +130,14 @@ class VideoDetect():
                         print(faceDetection['FaceMatches']['Face']['Confidence'])
                         print(faceDetection['FaceMatches']['Face']['ImageId'])
 
-            if 'NextToken' in get_response:
+            else:
+                destination_file = "../data/" + self.video.split("/")[-1].split(".")[0] + "_results_" + "%03d" % (counter,) + ".json"
+                with open(destination_file, 'w+') as f:
+                    json.dump(get_response, f)
+                print("\nDATA WRITTEN TO: {}\n".format(destination_file))
+                counter += 1
+
+            if 'NextToken' in get_response: # If the first "get_face_search" command didn't get all the results...
                 paginationToken = get_response['NextToken']
             else:
                 finished = True
