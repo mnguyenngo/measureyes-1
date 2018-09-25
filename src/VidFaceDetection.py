@@ -7,6 +7,7 @@ import boto3
 import json
 import sys
 import os
+import shutil
 import argparse
 
 
@@ -100,7 +101,7 @@ class VideoDetect():
         maxResults = 1000
         paginationToken = ''
         finished = False
-        counter = 1 # for adding index numbers to names of serial json output files
+        counter = 1
 
         while finished == False:
             get_response = self.rek.get_face_search(JobId=jobId,
@@ -131,7 +132,16 @@ class VideoDetect():
                         print(faceDetection['FaceMatches']['Face']['ImageId'])
 
             else:
-                destination_file = "../data/" + self.video.split("/")[-1].split(".")[0] + "_results_" + "%03d" % (counter,) + ".json"
+                # destination_dir assumes script is run from measureyes/src/
+                destination_dir = "../data/" + self.video.split("/")[-1].split(".")[0] + "_response/"
+                destination_file = destination_dir + self.video.split("/")[-1].split(".")[0] + "_response_" + "%04d" % (counter,) + ".json"
+                if counter == 1:
+                    # On first pass, create destination directory named for the video; overwrite it if it already exists
+                    # This directory will contain the video's individual .json response files
+                    if os.path.exists(destination_dir):
+                        shutil.rmtree(destination_dir)
+                    os.makedirs(destination_dir)
+
                 with open(destination_file, 'w+') as f:
                     json.dump(get_response, f)
                 print("\nDATA WRITTEN TO: {}\n".format(destination_file))
