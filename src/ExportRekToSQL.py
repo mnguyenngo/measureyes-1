@@ -10,8 +10,6 @@ Constituent Functions:
 -- rekognition_json_to_df(path, filter_poseNAs=False)
 -- face_detected_bool(d)
 -- insert_rekdf_to_SQL(connection, df)
-
-
 """
 
 
