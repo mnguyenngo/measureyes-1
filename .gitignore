@@ -8,3 +8,5 @@
 **/test_var.py
 **/vars.sh
 
+src/raspberry/face_detect/other_images/
+env/
