@@ -52,8 +52,7 @@ For the following steps, I followed the tutorial closely because all of the step
 
 - Changing swap size back
 
-## Face Detection
-Reference: [pyimagesearch](https://www.pyimagesearch.com/2018/02/26/face-detection-with-opencv-and-deep-learning/)
+## HTR Detection
 
 ### Face Detector in OpenCV's Repo
 
@@ -97,6 +96,23 @@ In the face_detect directory:
 python detect_faces_video.py --prototxt deploy.prototxt.txt --model res10_300x300_ssd_iter_140000.caffemodel
 ```
 
+#### Detect Persons
+
+In the realtime_object_detect directory:
+
+```bash
+python real_time_object_detection.py --prototxt MobileNetSSD_deploy.prototxt.txt --model MobileNetSSD_deploy.caffemodel
+```
+
+#### Running two scripts at the same time
+```bash
+python face_detect/detect_faces_video.py --prototxt face_detect/deploy.prototxt.txt --model face_detect/res10_300x300_ssd_iter_140000.caffemodel & python realtime_object_detect/real_time_object_detection.py --prototxt realtime_object_detect/MobileNetSSD_deploy.prototxt.txt --model realtime_object_detect/MobileNetSSD_deploy.caffemodel
+```
+
+__The script above will write data to two separate files__
+
+#### Training a custom model to detect persons and faces at the same time
+
 
 ## Camera Installation with Raspberry Pi
 Reference: https://www.pyimagesearch.com/2015/03/30/accessing-the-raspberry-pi-camera-with-opencv-and-python/
@@ -112,17 +128,6 @@ Reference:
 
 #### Method 1: Run person_detect and face_detect at the same time
 We would have to analyze two different data files and infer if the person in view achieved a head-turn. This assumes we can write the data to a file.
-
-#### Detect Persons
-
-In the realtime_object_detect directory:
-
-```bash
-python real_time_object_detection.py --prototxt MobileNetSSD_deploy.prototxt.txt --model MobileNetSSD_deploy.caffemodel
-```
-
-
-### Writing data to a file or database
 
 
 
