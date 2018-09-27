@@ -7,6 +7,7 @@ import boto3
 import json
 import sys
 import os
+import shutil
 import argparse
 
 
@@ -81,7 +82,7 @@ class VideoDetect():
                         jobFound = True
                         print_bool = True if write_data is None else False
                         #=============================================
-                        self.GetResultsFaceSearch(rekMessage['JobId'], print_response=print_bool)
+                        self.GetResultsFaceSearch(rekMessage['JobId']) #, print_response=print_bool)
                         #=============================================
 
                         self.sqs.delete_message(QueueUrl=self.queueUrl,
@@ -96,10 +97,11 @@ class VideoDetect():
         print('\nJOB COMPLETE')
 
 
-    def GetResultsFaceSearch(self, jobId, print_response=True):
-        maxResults = 50
+    def GetResultsFaceSearch(self, jobId, print_response=False):
+        maxResults = 1000
         paginationToken = ''
         finished = False
+        counter = 1
 
         while finished == False:
             get_response = self.rek.get_face_search(JobId=jobId,
@@ -129,7 +131,23 @@ class VideoDetect():
                         print(faceDetection['FaceMatches']['Face']['Confidence'])
                         print(faceDetection['FaceMatches']['Face']['ImageId'])
 
-            if 'NextToken' in get_response:
+            else:
+                # destination_dir assumes script is run from measureyes/src/
+                destination_dir = "../data/" + self.video.split("/")[-1].split(".")[0] + "_response/"
+                destination_file = destination_dir + self.video.split("/")[-1].split(".")[0] + "_response_" + "%04d" % (counter,) + ".json"
+                if counter == 1:
+                    # On first pass, create destination directory named for the video; overwrite it if it already exists
+                    # This directory will contain the video's individual .json response files
+                    if os.path.exists(destination_dir):
+                        shutil.rmtree(destination_dir)
+                    os.makedirs(destination_dir)
+
+                with open(destination_file, 'w+') as f:
+                    json.dump(get_response, f)
+                print("\nDATA WRITTEN TO: {}\n".format(destination_file))
+                counter += 1
+
+            if 'NextToken' in get_response: # If the first "get_face_search" command didn't get all the results...
                 paginationToken = get_response['NextToken']
             else:
                 finished = True
