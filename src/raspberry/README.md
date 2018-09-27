@@ -2,15 +2,17 @@
 
 ## Documentation
 
-OpenCV
-Raspbian Stretch
+* [OpenCV](https://docs.opencv.org/3.4/)
+* [Raspbian Stretch](https://www.raspberrypi.org/downloads/raspbian/)
 
 
 ## General Installation
 
+### Setup on your computer
+
 I used the [tutorial](https://www.pyimagesearch.com/2017/09/04/raspbian-stretch-install-opencv-3-python-on-your-raspberry-pi/) at pyimagesearch. I highlight some of the important steps when installing Python and OpenCV on the Raspberry Pi.
 
-### Download Raspbian Stretch and Load the image on a memory card
+#### Download Raspbian Stretch and Load the image on a memory card
 
 1. Download the ZIP file for RASPBIAN STRETCH WITH DESKTOP (1.6 GB)
 [Download Link](https://www.raspberrypi.org/downloads/raspbian/)
@@ -38,6 +40,7 @@ For the following steps, I followed the tutorial closely because all of the step
 #### Update Packages
 
 #### Download OpenCV
+- OpenCV version: ____ (9/15/2018)
 
 #### Download and Setup Python
 
@@ -48,6 +51,80 @@ For the following steps, I followed the tutorial closely because all of the step
 #### Testing the OpenCV Installation
 
 - Changing swap size back
+
+## Face Detection
+Reference: [pyimagesearch](https://www.pyimagesearch.com/2018/02/26/face-detection-with-opencv-and-deep-learning/)
+
+### Face Detector in OpenCV's Repo
+
+There is a out-of-the-box face detector available in OpenCV:
+* https://github.com/opencv/opencv/tree/master/samples/dnn/face_detector
+
+However:
+> When using OpenCV’s deep neural network module with Caffe models, you’ll need two sets of files:
+>
+> * The .prototxt file(s) which define the model architecture (i.e., the layers themselves)
+> * The .caffemodel file which contains the weights for the actual layers
+>
+> Both files are required to when using models trained using Caffe for deep learning.
+
+Get the prototxt and caffemodel from the Google Drive and download the files to the Raspberry Pi:
+* https://drive.google.com/drive/folders/16b2jIEeyvS_XowS-bzvOSTF3QJYw1al9?usp=sharing
+
+#### Using OpenCV on macOS
+
+* [Install OpenCV](https://www.pyimagesearch.com/2018/09/19/pip-install-opencv/)
+* Create a virtual environment. I made the virtual environment in the directory `measureyes/src/raspberry`. The env directory will be gitignored but I will update the requirements.txt file as I make progress.
+
+```bash
+virtualenv env
+source env/bin/activate
+```
+
+* If you are cloning this repo and want to recreate the virtual environment:
+
+```bash
+pip install -r requirements.txt
+```
+
+#### Detecting Faces
+Reference:
+* https://www.pyimagesearch.com/2018/02/26/face-detection-with-opencv-and-deep-learning/
+
+In the face_detect directory:
+
+```bash
+python detect_faces_video.py --prototxt deploy.prototxt.txt --model res10_300x300_ssd_iter_140000.caffemodel
+```
+
+
+## Camera Installation with Raspberry Pi
+Reference: https://www.pyimagesearch.com/2015/03/30/accessing-the-raspberry-pi-camera-with-opencv-and-python/
+
+## Real Time Object Detection
+Reference: https://www.pyimagesearch.com/2017/09/18/real-time-object-detection-with-deep-learning-and-opencv/
+
+### Detecting Faces and Persons Only
+Reference:
+* https://www.pyimagesearch.com/2018/05/14/a-gentle-guide-to-deep-learning-object-detection/
+* http://cocodataset.org/#home
+* http://mmlab.ie.cuhk.edu.hk/projects/WIDERFace/
+
+#### Method 1: Run person_detect and face_detect at the same time
+We would have to analyze two different data files and infer if the person in view achieved a head-turn. This assumes we can write the data to a file.
+
+#### Detect Persons
+
+In the realtime_object_detect directory:
+
+```bash
+python real_time_object_detection.py --prototxt MobileNetSSD_deploy.prototxt.txt --model MobileNetSSD_deploy.caffemodel
+```
+
+
+### Writing data to a file or database
+
+
 
 ## Next steps
 
