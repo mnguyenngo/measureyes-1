@@ -51,7 +51,7 @@ fps = FPS().start()
 
 # NN: open a csv file to write data; 'a' to append and not overwrite
 start = int(time.time())
-outfile = open(f'output_data/face_{start}.csv', 'a')
+outfile = open(f'realtime_object_detect/output_data/person_{start}.csv', 'a')
 outfile.write("{},{},0,0,0,0,0\n".format(start, 'videostart'))
 
 # loop over the frames from the video stream

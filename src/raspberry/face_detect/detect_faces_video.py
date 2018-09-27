@@ -33,7 +33,8 @@ time.sleep(2.0)
 
 # NN: open a csv file to write data; 'a' to append and not overwrite
 start = int(time.time())
-outfile = open(f'output_data/face_{start}.csv', 'w')
+outfile = open(f'face_detect/output_data/face_{start}.csv', 'a')
+outfile.write("{},{},0,0,0,0,0\n".format(start, 'videostart'))
 
 # loop over the frames from the video stream
 while True:
@@ -78,8 +79,8 @@ while True:
 
         # NN: write to output file
         now = int(time.time())
-        outfile.write(f"{now},{text},{startX},{startY},{endX},{endY}\n")
-        # print(f"{now},{text},{startX},{startY},{endX},{endY}")
+        outfile.write("{},face{},{:.2f},{},{},{},{}\n".format(
+            now, i, confidence, startX, startY, endX, endY))
 
     # show the output frame
     cv2.imshow("Frame", frame)
@@ -90,7 +91,11 @@ while True:
     if key == ord("q"):
         break
 
-# do a bit of cleanup
+# NN: close the outfile
+end = int(time.time())
+outfile.write("{},{},0,0,0,0,0\n".format(end, 'videoend'))
 outfile.close()
+
+# do a bit of cleanup
 cv2.destroyAllWindows()
 vs.stop()
