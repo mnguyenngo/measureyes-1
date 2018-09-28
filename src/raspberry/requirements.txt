@@ -5,6 +5,7 @@ imutils==0.5.1
 more-itertools==4.3.0
 numpy==1.15.2
 opencv-contrib-python==3.4.3.18
+plac==1.0.0
 pluggy==0.7.1
 py==1.6.0
 pytest==3.8.1
