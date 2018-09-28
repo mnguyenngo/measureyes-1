@@ -109,6 +109,8 @@ python real_time_object_detection.py --prototxt MobileNetSSD_deploy.prototxt.txt
 python face_detect/detect_faces_video.py --prototxt face_detect/deploy.prototxt.txt --model face_detect/res10_300x300_ssd_iter_140000.caffemodel & python realtime_object_detect/real_time_object_detection.py --prototxt realtime_object_detect/MobileNetSSD_deploy.prototxt.txt --model realtime_object_detect/MobileNetSSD_deploy.caffemodel
 ```
 
+__press 'q' to quit__
+
 __The script above will write data to two separate files__
 
 #### Training a custom model to detect persons and faces at the same time
