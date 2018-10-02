@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 __pycache__/
+=======
+>>>>>>> pip installed pytest-coverage
 .ipynb_checkpoints
 **/test_run_rek.sh
 **/get_HTs.sh
@@ -8,8 +11,11 @@ __pycache__/
 **/StoredVidProcess.py
 **/test_var.py
 **/vars.sh
+<<<<<<< HEAD
 **/Measureyes_Security*
 **/test_vid*
+=======
+>>>>>>> pip installed pytest-coverage
 
 src/raspberry/face_detect/other_images/
 env/
