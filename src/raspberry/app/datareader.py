@@ -54,7 +54,7 @@ class DataReader():
             raise
 
     def add_timeofday_col(self, df):
-        df['dt'] = pd.to_datetime(df['ts'], unit='s')
+        df['dt'] = pd.to_datetime(df['ts'])
         df['time_of_day'] = df['dt'].apply(lambda x: x.strftime('%H:%M:%S'))
         df = df.drop('dt', axis=1)
         return df
