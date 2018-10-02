@@ -16,7 +16,7 @@ import imutils
 import time
 import cv2
 import plac
-from datahandler import DataHandler
+from utils.datahandler import DataHandler
 
 # initialize the list of class labels MobileNet SSD was trained to
 # detect, then generate a set of bounding box colors for each class

@@ -17,6 +17,7 @@ class DataHandler():
         self.method = method
         self.start_time = int(time.time())
         self.csvfilename = f'{path}/{measure}_{self.start_time}.csv'
+        assert method in ['csv', 'sql']
         if self.method == 'csv':
             self.csvfile = open(self.csvfilename, 'a')
             self.startup()
@@ -24,7 +25,7 @@ class DataHandler():
     def startup(self):
         header = "ts,label,id,confidence,startX,startY,endX,endY\n"
         self.csvfile.write(header)
-        self.csvfile.write("{},{},None,0,0,0,0,0,0\n".format(
+        self.csvfile.write("{},{},0,0,0,0,0,0\n".format(
             self.start_time, 'videostart'))
 
     def write(self, data):
@@ -32,6 +33,6 @@ class DataHandler():
 
     def close(self):
         end_time = int(time.time())
-        self.csvfile.write("{},{},None,0,0,0,0,0,0\n".format(
+        self.csvfile.write("{},{},0,0,0,0,0,0\n".format(
             end_time, 'videoend'))
         self.csvfile.close()
