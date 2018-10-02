@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 class DataReader():
-    def __init__(self, face_data, person_data):
+    def __init__(self, face_data, person_data, read_from='csv'):
         """Process raw object detection data and provides different plot
         outputs
 
@@ -16,6 +16,10 @@ class DataReader():
         Attributes:
 
         """
+        assert read_from in ['csv', 'dataframe', 'df']
+        if read_from == 'csv':
+            person_data = pd.read_csv(person_data)
+            face_data = pd.read_csv(face_data)
         self.raw_face_data = face_data
         self.raw_person_data = person_data
         self.clean_face_data = self.process_data(face_data)
