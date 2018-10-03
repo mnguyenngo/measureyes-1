@@ -1,5 +1,5 @@
 ts,label,id,confidence,startX,startY,endX,endY
-1538161541,videostart,None,0,0,0,0,0,0
+1538161541,videostart,0,0,0,0,0,0
 1538161548,person,0,0.57,244,108,374,225
 1538161548,person,0,0.82,229,105,396,224
 1538161548,person,0,0.78,240,105,354,224
@@ -91,4 +91,4 @@ ts,label,id,confidence,startX,startY,endX,endY
 1538161553,person,0,0.93,0,49,148,226
 1538161553,person,0,0.96,0,25,151,225
 1538161553,person,0,0.92,-1,17,145,225
-1538161556,videoend,None,0,0,0,0,0,0
+1538161556,videoend,0,0,0,0,0,0

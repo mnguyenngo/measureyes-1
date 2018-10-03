@@ -12,3 +12,4 @@ src/raspberry/face_detect/other_images/
 env/
 private_notebooks/
 __pycache__
+.coverage

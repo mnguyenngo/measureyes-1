@@ -3,7 +3,7 @@
 Source: This code was modified from code provided by PyImageSearch.
 
 USAGE
->>> python measure_faces.py -p deploy.prototxt.txt -m res10_300x300_ssd_iter_140000.caffemodel
+>>> python measure_faces.py -p models/deploy.prototxt.txt -m models/res10_300x300_ssd_iter_140000.caffemodel
 
 press 'q' to quit
 """
@@ -15,7 +15,7 @@ import imutils
 import time
 import cv2
 import plac
-from datahandler import DataHandler
+from utils.datahandler import DataHandler
 
 
 @plac.annotations(
@@ -24,6 +24,8 @@ from datahandler import DataHandler
     min_confidence=("minimum probability to filter weak detections", "option",
                     "c"))
 def main(prototxt, model, min_confidence=0.5):
+    """Starts up the webcam and runs object detection on the video feed
+    """
     # load our serialized model from disk
     print("[INFO] loading model...")
     net = cv2.dnn.readNetFromCaffe(prototxt, model)
@@ -34,8 +36,9 @@ def main(prototxt, model, min_confidence=0.5):
     time.sleep(2.0)
 
     # NN: open a csv file to write data; 'a' to append and not overwrite
-    path_to_data_dir = "../data/output"
-    results = DataHandler(measure="faces", path=path_to_data_dir, method='csv')
+    path_to_data = "../data/output"
+    results = DataHandler(measure="faces", path=path_to_data, method='csv')
+    results.makefile()
 
     # loop over the frames from the video stream
     while True:
