@@ -136,7 +136,6 @@ def insert_rekdf_to_SQL(connection, df):
     """Append rekognition_json_to_df() DataFrame to the rekmaster table in Postgres.
     """
     dtypes = {
-        "video": VARCHAR(),
         "source_file": VARCHAR(),
         "timestamp": Integer(),
         "person_index": Integer(),
