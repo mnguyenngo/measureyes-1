@@ -1,4 +1,4 @@
-"""
+"""Class object that handles recording of data either to csv or SQL.
 """
 import time
 

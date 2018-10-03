@@ -1,3 +1,5 @@
+"""Class object to read raw data output and provide methods to plot the data
+"""
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
@@ -18,8 +20,8 @@ class DataReader():
         """
         assert read_from in ['csv', 'dataframe', 'df']
         if read_from == 'csv':
-            person_data = pd.read_csv(person_data)
             face_data = pd.read_csv(face_data)
+            person_data = pd.read_csv(person_data)
         self.raw_face_data = face_data
         self.raw_person_data = person_data
         self.clean_face_data = self.process_data(face_data)
@@ -28,10 +30,10 @@ class DataReader():
         self.end_date = None
         self.x_axis_ts = self.get_timeframe()
         self.x_axis_timeofday = self.ts_to_timeofday(self.x_axis_ts)
-
         self.htr_data = self.get_htr_data()
 
     def process_data(self, raw_df):
+        """Returns a groupby object grouped by each second"""
         raw_gb = raw_df.groupby(by=['ts', 'id'])
         raw_gb_mean = raw_gb.mean().reset_index()
 
@@ -101,6 +103,7 @@ class DataReader():
         """Write processed data to csv or sql."""
         pass
 
+    # plot methods
     def stackarea(self, figsize=(6, 6), timestep=5):
         """Returns a stacked area plot with persons on the bottom"""
         fig, ax = plt.subplots(figsize=figsize)
