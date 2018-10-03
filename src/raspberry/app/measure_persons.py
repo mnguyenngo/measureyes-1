@@ -52,9 +52,9 @@ def main(prototxt, model, min_confidence=0.5):
     fps = FPS().start()
 
     # NN: open a csv file to write data; 'a' to append and not overwrite
-    path_to_data_dir = "../data/output"
-    results = DataHandler(measure="persons", path=path_to_data_dir,
-                          method='csv')
+    path_to_data = "../data/output"
+    results = DataHandler(measure="persons", path=path_to_data, method='csv')
+    results.makefile()
 
     # loop over the frames from the video stream
     while True:
