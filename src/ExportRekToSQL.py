@@ -1,9 +1,9 @@
 """
 Export AWS Rekognition response jsons contained in a specified path/dir to Postgres database.
 
-To run from terminal shell:    $ python PipeRekToSQL.py --path <"path/data_dir/">
+To run from terminal shell:    $ python ExportRekToSQL.py --path <"path/data_dir/">
 
-For help from terminal shell:  $ python PipeRekToSQL.py --help
+For help from terminal shell:  $ python ExportRekToSQL.py --help
 
 Constituent Functions:
 -- queue_jsons(path)
@@ -75,7 +75,7 @@ def rekognition_json_to_df(path, filter_poseNAs=False):
         ]
 
     source = path.split("/")[-1]
-    video = source.split("_response_")[0] + ".mp4"
+    video = source.split("_response_")[0]
 
     rows_filtered = df["Person.Face.Pose.Pitch"].map(lambda x: not np.isnan(x)) # filter out frames with no faces
     if filter_poseNAs:
@@ -84,11 +84,9 @@ def rekognition_json_to_df(path, filter_poseNAs=False):
         df = df[cols_raw]
 
     df["SourceFile"] = source
-    df["Video"] = video
 
     # Reorder columns
     cols_reordered = [
-            "Video",
             "SourceFile",
             "Timestamp",
             "Person.Index",
@@ -102,7 +100,6 @@ def rekognition_json_to_df(path, filter_poseNAs=False):
 
     # Rename columns
     cols_renamed = [
-            "video",
             "source_file",
             "timestamp",
             "person_index",
@@ -116,6 +113,7 @@ def rekognition_json_to_df(path, filter_poseNAs=False):
     # Order and index records by Timestamp
     df.sort_values("timestamp", inplace=True)
     df.index = np.arange(len(df))
+    df.name = video.lower()
 
     return df
 
@@ -135,7 +133,7 @@ def face_detected_bool(d):
 
 
 def insert_rekdf_to_SQL(connection, df):
-    """Append parsed AWS Rekogntion response df to the rekmaster table in Postgres.
+    """Append rekognition_json_to_df() DataFrame to the rekmaster table in Postgres.
     """
     dtypes = {
         "video": VARCHAR(),
@@ -148,12 +146,10 @@ def insert_rekdf_to_SQL(connection, df):
         "face_box_left": Float(32)
     }
 
-    df.to_sql('rekmaster', con=connection, if_exists='append', index=False, dtype=dtypes)
+    df.to_sql(df.name, con=connection, if_exists='append', index=False, dtype=dtypes)
 
 
 if __name__ == "__main__":
-
-
     # Establish connection to Postgres DB
     connection_str = 'postgresql:///measureyes'
     engine = create_engine(connection_str, echo=False)
