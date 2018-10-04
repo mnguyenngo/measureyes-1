@@ -94,8 +94,9 @@ class DataReader():
                                 else 0 for ts in self.x_axis_ts]
 
         htr_df = pd.DataFrame(data={
+            'ts': self.x_axis_timeofday,
             'faces': infill_count_faces,
-            'persons': infill_count_persons}, index=self.x_axis_timeofday)
+            'persons': infill_count_persons})
 
         return htr_df
 
@@ -104,30 +105,60 @@ class DataReader():
         pass
 
     # plot methods
-    def stackarea(self, figsize=(6, 6), timestep=5):
+    def stackarea(self, figsize=(6, 6), timestep=1, bin_time_by="15Min"):
         """Returns a stacked area plot with persons on the bottom"""
         fig, ax = plt.subplots(figsize=figsize)
-        X = self.x_axis_timeofday
-        Y1 = self.htr_data['persons']
-        Y2 = self.htr_data['faces']
-        ax.stackplot(X, np.array([Y1, Y2]), labels=['persons', 'faces'],
+
+        if bin_time_by is None:
+            X = self.x_axis_timeofday
+            Y1 = self.htr_data['faces']
+            Y2 = self.htr_data['persons'] - Y1
+            title = "Pedestrians and Head-Turns Per Second"
+        else:
+            X, Y1, Y2, title = self.plot_attr_for_bin(bin_time_by)
+
+        ax.stackplot(X, np.array([Y1, Y2]), labels=['head-turn'],
                      edgecolor='white')
         xticks = ax.get_xticks()
         ax.set_xticks(xticks[::timestep])
+        plt.xlabel('time')
+        plt.ylabel(f'persons per {bin_time_by}')
+        plt.title(title)
         plt.legend()
         plt.show()
 
-    def stackbar(self, figsize=(6, 6), timestep=5):
+    def stackbar(self, figsize=(6, 6), timestep=1, bin_time_by="15Min",
+                 width=0.005):
         """Returns a stacked bar plot with persons on the bottom"""
         fig, ax = plt.subplots(figsize=figsize)
-        X = self.x_axis_timeofday
-        Y1 = self.htr_data['persons']
-        Y2 = self.htr_data['faces']
-        ax.bar(X, Y1, color='#5392ff')
-        ax.bar(X, Y2, color='#ff5c49', bottom=Y1)
+
+        if bin_time_by is None:
+            X = self.x_axis_timeofday
+            Y1 = self.htr_data['faces']
+            Y2 = self.htr_data['persons'] - Y1
+            title = "Pedestrians and Head-Turns Per Second"
+        else:
+            X, Y1, Y2, title = self.plot_attr_for_bin(bin_time_by)
+
+        ax.bar(X, Y1, color='#5392ff', width=width, label="head-turn")
+        ax.bar(X, Y2, color='#ff5c49', width=width, bottom=Y1)
         xticks = ax.get_xticks()
         ax.set_xticks(xticks[::timestep])
+        plt.xlabel('time')
+        plt.ylabel(f'persons per {bin_time_by}')
+        plt.title(title)
+        plt.legend()
         plt.show()
+
+    def plot_attr_for_bin(self, bin_time_by):
+        htr = self.htr_data.copy()
+        htr['dt'] = htr['ts'].apply(pd.to_datetime)
+        htr_gb = htr.groupby(pd.Grouper(key='dt', freq=bin_time_by)).sum()
+        X = htr_gb.index
+        Y1 = htr_gb['faces']
+        Y2 = htr_gb['persons'] - htr_gb['faces']
+        title = f"Pedestrians and Head-Turns Per {bin_time_by.capitalize()}"
+        return X, Y1, Y2, title
 
     def plotbar(self, metric='face', figsize=(6, 6), timestep=5):
         """
