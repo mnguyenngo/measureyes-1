@@ -79,6 +79,7 @@ def main(prototxt, model, min_confidence=0.5):
             # the prediction
             confidence = detections[0, 0, i, 2]
 
+
             # filter out weak detections by ensuring the `confidence` is
             # greater than the minimum confidence
             if confidence > min_confidence:
@@ -107,7 +108,8 @@ def main(prototxt, model, min_confidence=0.5):
                 # NN: write to output file
                 now = int(time.time())
                 data = "{},{},{},{:.2f},{},{},{},{}".format(
-                    now, label, i, confidence, startX, startY, endX, endY)
+                    now, label, i, confidence, startX, startY, endX,
+                    endY)
                 results.write(data)
 
         # show the output frame
