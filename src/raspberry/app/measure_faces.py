@@ -65,28 +65,26 @@ def main(prototxt, model, min_confidence=0.5):
 
             # filter out weak detections by ensuring the `confidence` is
             # greater than the minimum confidence
-            if confidence < min_confidence:
-                continue
+            if confidence > min_confidence:
+                # compute the (x, y)-coordinates of the bounding box for the
+                # object
+                box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
+                (startX, startY, endX, endY) = box.astype("int")
 
-            # compute the (x, y)-coordinates of the bounding box for the
-            # object
-            box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
-            (startX, startY, endX, endY) = box.astype("int")
+                # draw the bounding box of the face along with the associated
+                # probability
+                text = "{:.2f}%".format(confidence * 100)
+                y = startY - 10 if startY - 10 > 10 else startY + 10
+                cv2.rectangle(frame, (startX, startY), (endX, endY),
+                              (0, 0, 255), 2)
+                cv2.putText(frame, text, (startX, y), cv2.FONT_HERSHEY_SIMPLEX,
+                            0.45, (0, 0, 255), 2)
 
-            # draw the bounding box of the face along with the associated
-            # probability
-            text = "{:.2f}%".format(confidence * 100)
-            y = startY - 10 if startY - 10 > 10 else startY + 10
-            cv2.rectangle(frame, (startX, startY), (endX, endY), (0, 0, 255),
-                          2)
-            cv2.putText(frame, text, (startX, y), cv2.FONT_HERSHEY_SIMPLEX,
-                        0.45, (0, 0, 255), 2)
-
-            # NN: write to output file
-            now = int(time.time())
-            data = "{},face,{},{:.2f},{},{},{},{}".format(
-                now, i, confidence, startX, startY, endX, endY)
-            results.write(data)
+                # NN: write to output file
+                now = int(time.time())
+                data = "{},face,{},{:.2f},{},{},{},{}".format(
+                    now, i, confidence, startX, startY, endX, endY)
+                results.write(data)
 
         # show the output frame
         cv2.imshow("Frame", frame)

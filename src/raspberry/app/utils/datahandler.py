@@ -4,7 +4,7 @@ import time
 
 
 class DataHandler():
-    def __init__(self, measure, path=None, method='csv'):
+    def __init__(self, measure, path, method='csv'):
         """Records the results from the object detection video feed.
 
         Arguments:
@@ -14,11 +14,13 @@ class DataHandler():
 
         Note: sql method is not supported yet
         """
+        assert measure in ['faces', 'persons']
         assert method in ['csv', 'sql']
         self.method = method
         self.start_time = int(time.time())
         self.csvfilename = f'{path}/{measure}_{self.start_time}.csv'
         self.csvfile = None
+        # self.dummy_csvfname = f'{path}/dummy_{measure}_{self.start_time}.csv'
 
     def makefile(self):
         """Creates a csv file to record the results"""
@@ -39,8 +41,3 @@ class DataHandler():
         self.csvfile.write("{},{},0,0,0,0,0,0\n".format(
             end_time, 'videoend'))
         self.csvfile.close()
-
-    def generate_dummy(self, duration, rate_person, rate_face, framerate):
-        """Generate dummy data and write to a csv file
-        """
-        pass
