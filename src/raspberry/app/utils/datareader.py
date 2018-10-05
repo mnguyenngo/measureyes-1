@@ -31,6 +31,7 @@ class DataReader():
         self.x_axis_ts = self.get_timeframe()
         self.x_axis_timeofday = self.ts_to_timeofday(self.x_axis_ts)
         self.htr_data = self.get_htr_data()
+        self.avg_htr = self.get_avg_htr()
 
     def process_data(self, raw_df):
         """Returns a groupby object grouped by each second"""
@@ -94,15 +95,27 @@ class DataReader():
                                 else 0 for ts in self.x_axis_ts]
 
         htr_df = pd.DataFrame(data={
-            'ts': self.x_axis_timeofday,
+            'ts': self.x_axis_ts,
             'faces': infill_count_faces,
             'persons': infill_count_persons})
+
+        htr_df = self.resolve_extra_faces(htr_df)
 
         return htr_df
 
     def save_htr_data(self, path=None, method='csv'):
         """Write processed data to csv or sql."""
         pass
+
+    def get_avg_htr(self):
+        return (self.htr_data['faces'] / self.htr_data['persons']).mean()
+
+    def resolve_extra_faces(self, df):
+        # boolean series where num of faces is greater than num of persons
+        f_gt_p = df['faces'] > df['persons']
+        for idx, row in df[f_gt_p].iterrows():
+            df.loc[idx, 'faces'] = row['persons']
+        return df
 
     # plot methods
     def stackarea(self, figsize=(6, 6), timestep=1, bin_time_by="15Min"):
