@@ -153,6 +153,7 @@ class HTDetect(object):
         self.HTs_df.sort_values('HT_start', inplace=True)
         self.HTs_df.index = range(1, len(self.HTs_df) + 1)
         self.HTs_df['person_index'] = self.HTs_df['person_index'].astype('int')
+        self.HTs_df['HT_start'] = self.HTs_df['HT_start'].astype('int')
 
         # Compute count of persons making HTs and HTR
         self.HTers = len(self.HTs_df['person_index'].unique())
