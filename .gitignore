@@ -8,6 +8,8 @@ __pycache__/
 **/StoredVidProcess.py
 **/test_var.py
 **/vars.sh
+**/Measureyes_Security*
+**/test_vid*
 
 src/raspberry/face_detect/other_images/
 env/
