@@ -1,7 +1,7 @@
 """
 Export AWS Rekognition response jsons contained in a specified path/dir to Postgres database.
 
-To run from terminal shell:    $ python ExportRekToSQL.py --path <"path/data_dir/">
+To run from terminal shell:    $ python ExportRekToSQL.py --path <"path/destination_dir/">
 
 For help from terminal shell:  $ python ExportRekToSQL.py --help
 
@@ -32,8 +32,8 @@ engine = create_engine(connection_str, echo=False)
 
 def queue_jsons(path):
     """
-    From response directory, return a list of path/file(s) to be fed into rekognition_json_to_df.
-    path -- (str) may be absolute or relative from measureyes/src/
+    From response directory, return a list of json files to be fed into rekognition_json_to_df.
+    path -- (str) may be absolute or relative from measureyes/src/aws/app/
         example: "../data/<subdir>/".
     """
     f_list = os.listdir(path)
@@ -45,7 +45,8 @@ def queue_jsons(path):
 
 def rekognition_json_to_df(path, filter_poseNAs=False):
     """Convert AWS Rekognition output json into Pandas DataFrame.
-    Works for json responses written by AWS Rekognition GetFaceSearch function (or as run in VidFaceSearch.py)
+    Works for json responses written by AWS Rekognition GetFaceSearch function
+    (or as run in VidFaceSearch.py)
 
     Arguments:
         path -- (string) path/file
@@ -133,7 +134,7 @@ def face_detected_bool(d):
 
 
 def insert_rekdf_to_SQL(connection, df):
-    """Append rekognition_json_to_df() DataFrame to the rekmaster table in Postgres.
+    """Write rekognition_json_to_df() DataFrame to table in Postgres DB.
     """
     dtypes = {
         "source_file": VARCHAR(),
