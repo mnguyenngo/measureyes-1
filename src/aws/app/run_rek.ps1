@@ -2,7 +2,7 @@
 
 # Script to run VidFaceDetection.py
 
-# PREREQUISITES:
+# REQUIREMENTS:
 #    1. AWS Account and AWS IAM user
 #    2. Python 3.6+ with argparse package installed.
 #    3. AWS CLI and boto3 package installed and configured with permissions (access keys) for IAM USER
