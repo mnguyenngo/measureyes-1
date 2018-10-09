@@ -3,7 +3,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-from datetime import datetime
+import datetime
 
 
 class DataReader():
@@ -70,7 +70,7 @@ class DataReader():
         timeofday = []
         for ts in l_ts:
             timeofday.append(
-                datetime.utcfromtimestamp(ts).strftime('%H:%M:%S'))
+                datetime.datetime.utcfromtimestamp(ts).strftime('%H:%M:%S'))
         assert len(timeofday) == len(l_ts)
         return timeofday
 
@@ -83,7 +83,7 @@ class DataReader():
         return np.arange(min(min_ts_face, min_ts_person),
                          max(max_ts_face, max_ts_person), 1)
 
-    def get_htr_data(self):
+    def get_htr_data(self, time_format=None):
         count_faces = self.clean_face_data.groupby(by='ts').nunique()
         count_persons = self.clean_person_data.groupby(by='ts').nunique()
 
@@ -94,8 +94,13 @@ class DataReader():
                                 if ts in count_persons.index
                                 else 0 for ts in self.x_axis_ts]
 
+        if time_format is "unix":
+            time_col = self.x_axis_ts
+        else:
+            time_col = self.x_axis_timeofday
+
         htr_df = pd.DataFrame(data={
-            'ts': self.x_axis_ts,
+            'ts': time_col,
             'faces': infill_count_faces,
             'persons': infill_count_persons})
 
