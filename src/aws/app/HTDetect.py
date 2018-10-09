@@ -19,7 +19,8 @@ class HTDetect(object):
         source: (string) Unique ID name for Postgres table containing target data
 
     METHODS
-        main(yaw_threshold=45, pitch_threshold=45, dwell_threshold=1.5, HT_break=1.5)
+        main(yaw_threshold=45, pitch_threshold=45, dwell_threshold=1.5, HT_break=1.5,
+             print=False)
 
     ATTRIBUTES
         all_records_df: (DataFrame) raw data from source
