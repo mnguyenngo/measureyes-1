@@ -12,7 +12,11 @@ import argparse
 
 
 class VideoDetect():
-
+    """
+    Execute AWS Rekognition StartFaceSearch and GetFaceSearch functions on
+    target video. Write response output to json files contained in directory named
+    for unique video ID. Optionally
+    """
     rek = boto3.client('rekognition')
     sqs = boto3.client('sqs')
     s3 = boto3.resource('s3')
@@ -35,10 +39,15 @@ class VideoDetect():
         self.jobTag = jobTag
 
 
-    def main(self, write_data=None):
+    def main(self, print_response=False):
         """
-        Execute AWS Rekognition StartFaceSearch and GetFaceSearch functions.
-        Optionally (default) print FaceSearch response data.
+        Execute AWS Rekognition StartFaceSearch and GetFaceSearch functions. Write
+        response data to json files (default) or optionally print FaceSearch response
+        data to terminal.
+
+        ARGS
+            print_response=False: (bool) If True, print rekognition response data
+            to terminal and DO NOT write data to json files.
         """
         jobFound = False
 
@@ -80,9 +89,8 @@ class VideoDetect():
                     if str(rekMessage['JobId']) == response['JobId']:
                         print('Matching Job Found:' + rekMessage['JobId'])
                         jobFound = True
-                        print_bool = True if write_data is None else False
                         #=============================================
-                        self.GetResultsFaceSearch(rekMessage['JobId']) #, print_response=print_bool)
+                        self.GetResultsFaceSearch(rekMessage['JobId'], print_response)
                         #=============================================
 
                         self.sqs.delete_message(QueueUrl=self.queueUrl,
@@ -132,7 +140,7 @@ class VideoDetect():
                         print(faceDetection['FaceMatches']['Face']['ImageId'])
 
             else:
-                # destination_dir assumes script is run from measureyes/src/
+                # destination_dir assumes script is run from measureyes/src/aws/app/
                 destination_dir = "../data/" + self.video.split("/")[-1].split(".")[0] + "_response/"
                 destination_file = destination_dir + self.video.split("/")[-1].split(".")[0] + "_response_" + "%04d" % (counter,) + ".json"
                 if counter == 1:
