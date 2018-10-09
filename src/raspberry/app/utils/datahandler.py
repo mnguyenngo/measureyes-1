@@ -20,7 +20,6 @@ class DataHandler():
         self.start_time = int(time.time())
         self.csvfilename = f'{path}/{measure}_{self.start_time}.csv'
         self.csvfile = None
-        # self.dummy_csvfname = f'{path}/dummy_{measure}_{self.start_time}.csv'
 
     def makefile(self):
         """Creates a csv file to record the results"""
@@ -30,9 +29,18 @@ class DataHandler():
         self.csvfile.write("{},{},0,0,0,0,0,0\n".format(
             self.start_time, 'videostart'))
 
+        print("Object detection results are being recorded")
+        print("""Run the following command in a new terminal to stream the
+              output data to the dashboard:""")
+        print(f'''python stream_to_dashboard.py \
+../data/output/faces_{self.start_time}.csv \
+../data/output/persons_{self.start_time}.csv -a \
+"https://hidden-lowlands-41791.herokuapp.com/responses/1"''')
+
     def write(self, data):
         """Writes each detection event into the csv file"""
         self.csvfile.write(f"{data}\n")
+        self.csvfile.flush()
 
     def close(self):
         """Adds the last line of data to indicate videoend and closes the file
